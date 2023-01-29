@@ -8,18 +8,20 @@ app = Flask(__name__)
 app.env = base_settings.ENV
 
 
-@app.route('/air-pollution/', strict_slashes=False, methods=["POST"])
+@app.route("/air-pollution/", strict_slashes=False, methods=["POST"])
 async def air_pollution_endpoint():
     payload = request.get_json()
 
     try:
-        result = get_air_pollution(AirConditionPayload(
-            lat=payload["lat"],
-            lon=payload["lon"],
-            date_string=payload["date_string"]
-        ))
-    except ValidationError as e:
-        return jsonify({"error": str(e)}), 422
+        result = get_air_pollution(AirConditionPayload(**payload))
+    except (ValidationError, TypeError) as e:
+        message = (
+            str(e)
+            if isinstance(e, ValidationError)
+            else "The request payload is invalid"
+        )
+        status = 422 if isinstance(e, ValidationError) else 400
+        return jsonify({"error": message}), status
 
     if result:
         return jsonify(result)
@@ -27,5 +29,5 @@ async def air_pollution_endpoint():
     return jsonify({"message": "Wait for 2 seconds"})
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000, debug=True)
