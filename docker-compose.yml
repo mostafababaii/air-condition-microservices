@@ -7,7 +7,7 @@ services:
       dockerfile: docker/apiGateway.Dockerfile
     restart: unless-stopped
     command: python app.py
-    env_file: src/apiGateway/.env
+    env_file: src/apiGateway/.env.dist
     depends_on: [redis, mq]
     ports:
       - 8000:8000
@@ -20,7 +20,7 @@ services:
       dockerfile: docker/apiGateway.Dockerfile
     restart: unless-stopped
     command: python api/consumers/air:pollution:consumer.py
-    env_file: src/apiGateway/.env
+    env_file: src/apiGateway/.env.dist
     depends_on: [redis, mq]
     volumes:
       - ./src/apiGateway:/app
@@ -31,7 +31,7 @@ services:
       dockerfile: docker/pollutionService.Dockerfile
     restart: unless-stopped
     command: ./manage.py air:pollution:consumer
-    env_file: src/pollutionService/.env
+    env_file: src/pollutionService/.env.dist
     depends_on: [pollution.db, elasticsearch, mq, redis]
     volumes:
       - ./src/pollutionService:/app
@@ -42,7 +42,7 @@ services:
       dockerfile: docker/pollutionService.Dockerfile
     restart: unless-stopped
     command: 'watchmedo auto-restart -d ./ -p *.py -R -- celery -A project worker --pool=gevent -c 50 -l info -n worker@default'
-    env_file: src/pollutionService/.env
+    env_file: src/pollutionService/.env.dist
     environment:
       C_FORCE_ROOT: true
     depends_on: [pollution.service, elasticsearch, mq, redis]
@@ -55,7 +55,7 @@ services:
       dockerfile: docker/pollutionService.Dockerfile
     restart: unless-stopped
     command: celery -A project flower --port=5555
-    env_file: src/pollutionService/.env
+    env_file: src/pollutionService/.env.dist
     environment:
       C_FORCE_ROOT: true
     depends_on: [pollution.service, mq, redis]
