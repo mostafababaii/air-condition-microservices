@@ -47,7 +47,7 @@ class AirConditionPayload:
         try:
             datetime.datetime.strptime(date_string, '%Y-%m-%d')
         except ValueError:
-            raise ValueError("Incorrect data format, should be YYYY-MM-DD")
+            raise ValueError("Incorrect date format, should be YYYY-MM-DD")
         self._date_string = date_string
 
     def to_dict(self) -> Dict:
