@@ -8,9 +8,6 @@ class AirPollution(models.Model):
     body = models.JSONField()
     created_at = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self) -> str:
-        return self.email
-
 
 class CreateAirPollutionRepository(PersistAirPollutionRepository):
     def persist(self, air_pollution: AirPollution):
