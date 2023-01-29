@@ -85,7 +85,7 @@ class AirPollutionProxy(AirConditionProxy):
             lon=self.payload.lon,
             date_string=self.payload.date_string,
         )
-        result = self.cache_service.setnx(key, b"{}")
+        result = self.cache_service.setnx(key, b"")
         if result:
             return self.producer.publish(self.payload.to_dict())
         return self.cache_service.get(key)
