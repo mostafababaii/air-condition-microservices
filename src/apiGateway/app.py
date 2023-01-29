@@ -11,11 +11,14 @@ app.env = base_settings.ENV
 async def air_pollution_endpoint():
     payload = request.get_json()
 
-    result = get_air_pollution(AirConditionPayload(
-        lat=payload["lat"],
-        lon=payload["lon"],
-        date_string=payload["date_string"]
-    ))
+    try:
+        result = get_air_pollution(AirConditionPayload(
+            lat=payload["lat"],
+            lon=payload["lon"],
+            date_string=payload["date_string"]
+        ))
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 422
 
     if result:
         return jsonify(result)

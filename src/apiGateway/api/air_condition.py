@@ -1,6 +1,6 @@
 import abc
 import datetime
-from typing import Dict, Optional
+from typing import Dict, Optional, Union
 from services.cache import CacheService
 from api.message_queue import (
     Producer,
@@ -17,6 +17,26 @@ class AirConditionPayload:
         self.lat = lat
         self.lon = lon
         self.date_string = date_string
+
+    @property
+    def lat(self) -> Union[float, int]:
+        return self._lat
+
+    @lat.setter
+    def lat(self, value: Union[float, int]):
+        if not isinstance(value, (float, int)):
+            raise ValueError("Incorrect latitude value type, should be instance of float or int")
+        self._lat = value
+
+    @property
+    def lon(self) -> Union[float, int]:
+        return self._lon
+
+    @lon.setter
+    def lon(self, value: Union[float, int]):
+        if not isinstance(value, (float, int)):
+            raise ValueError("Incorrect longitude value type, should be instance of float or int")
+        self._lon = value
 
     @property
     def date_string(self) -> str:
