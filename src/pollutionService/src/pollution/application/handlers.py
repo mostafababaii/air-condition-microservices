@@ -9,7 +9,7 @@ class AirPollutionCommandHandler(CommandHandler):
         result = repo.persist(
             AirPollution(
                 query=command.query,
-                body=command.body
+                data=command.data
             )
         )
 

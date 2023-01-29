@@ -22,7 +22,7 @@ class AirPollutionDocument(Document):
         }
     )
 
-    body = fields.ObjectField()
+    data = fields.ObjectField()
 
     class Index:
         name = "air.pollution"
@@ -61,5 +61,5 @@ class GetAirPollutionQuery(ElasticsearchQueryClient):
         return self._transform(result)
 
     def _transform(self, result) -> Dict:
-        result = [item.body.__dict__["_d_"] for item in result]
+        result = [item.data.__dict__["_d_"] for item in result]
         return result[0] if result else {}

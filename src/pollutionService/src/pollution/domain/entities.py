@@ -2,6 +2,6 @@ from typing import Dict
 
 
 class AirPollution:
-    def __init__(self, query: Dict, body: Dict):
+    def __init__(self, query: Dict, data: Dict):
         self.query = query
-        self.body = body
+        self.data = data

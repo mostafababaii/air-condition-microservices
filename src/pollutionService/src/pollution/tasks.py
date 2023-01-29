@@ -22,7 +22,7 @@ def get_air_pollution(lat: float, lon: float, date_string: str):
     if not result:
         response = AirPollutionClient(**query_payload).submit()
         result = response["list"][0]
-        command = AirPollutionCommand(query=query_payload, body=result)
+        command = AirPollutionCommand(query=query_payload, data=result)
         bus.handle(command)
 
     rabbitmq_client = get_amq_client(config=rabbitmq_default_config)
@@ -38,4 +38,4 @@ def get_air_pollution(lat: float, lon: float, date_string: str):
         )
     )
 
-    producer.publish({"query": query_payload, "body": result})
+    producer.publish({"query": query_payload, "data": result})

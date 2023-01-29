@@ -105,7 +105,7 @@ class AirPollutionConsumer(RabbitMQConsumer):
         payload = json.loads(body.decode())
 
         query = payload["query"]
-        body = payload["body"]
+        data = payload["data"]
 
         key = "air-pollution-{lat}-{lon}-{date_string}".format(
             lat=query["lat"],
@@ -113,5 +113,5 @@ class AirPollutionConsumer(RabbitMQConsumer):
             date_string=query["date_string"],
         )
 
-        cache_service.set(key, json.dumps(body))
+        cache_service.set(key, json.dumps(data))
         ch.basic_ack(delivery_tag=method.delivery_tag)
