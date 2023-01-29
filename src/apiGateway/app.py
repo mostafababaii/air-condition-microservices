@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from settings import base as base_settings
 from api.air_condition import get_air_pollution, AirConditionPayload
+from api.air_condition import ValidationError
 
 
 app = Flask(__name__)
@@ -17,7 +18,7 @@ async def air_pollution_endpoint():
             lon=payload["lon"],
             date_string=payload["date_string"]
         ))
-    except ValueError as e:
+    except ValidationError as e:
         return jsonify({"error": str(e)}), 422
 
     if result:

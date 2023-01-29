@@ -12,6 +12,10 @@ from services.message_queue import get_amq_client
 from settings import base as base_settings
 
 
+class ValidationError(ValueError):
+    pass
+
+
 class AirConditionPayload:
     def __init__(self, lat: float, lon: float, date_string: str):
         self.lat = lat
@@ -25,7 +29,7 @@ class AirConditionPayload:
     @lat.setter
     def lat(self, value: Union[float, int]):
         if not isinstance(value, (float, int)):
-            raise ValueError("Incorrect latitude value type, should be instance of float or int")
+            raise ValidationError("Incorrect latitude value type, should be instance of float or int")
         self._lat = value
 
     @property
@@ -35,7 +39,7 @@ class AirConditionPayload:
     @lon.setter
     def lon(self, value: Union[float, int]):
         if not isinstance(value, (float, int)):
-            raise ValueError("Incorrect longitude value type, should be instance of float or int")
+            raise ValidationError("Incorrect longitude value type, should be instance of float or int")
         self._lon = value
 
     @property
@@ -47,7 +51,7 @@ class AirConditionPayload:
         try:
             datetime.datetime.strptime(date_string, '%Y-%m-%d')
         except ValueError:
-            raise ValueError("Incorrect date format, should be YYYY-MM-DD")
+            raise ValidationError("Incorrect date format, should be YYYY-MM-DD")
         self._date_string = date_string
 
     def to_dict(self) -> Dict:
