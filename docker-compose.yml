@@ -1,0 +1,131 @@
+version: "3.9"
+
+services:
+  api.gateway:
+    build:
+      context: .
+      dockerfile: docker/apiGateway.Dockerfile
+    restart: unless-stopped
+    command: python app.py
+    env_file: src/apiGateway/.env
+    depends_on: [redis, mq]
+    ports:
+      - 8000:8000
+    volumes:
+      - ./src/apiGateway:/app
+
+  api.gateway.consumer:
+    build:
+      context: .
+      dockerfile: docker/apiGateway.Dockerfile
+    restart: unless-stopped
+    command: python api/consumers/air:pollution:consumer.py
+    env_file: src/apiGateway/.env
+    depends_on: [redis, mq]
+    volumes:
+      - ./src/apiGateway:/app
+
+  pollution.service:
+    build:
+      context: .
+      dockerfile: docker/pollutionService.Dockerfile
+    restart: unless-stopped
+    command: ./manage.py air:pollution:consumer
+    env_file: src/pollutionService/.env
+    depends_on: [pollution.db, elasticsearch, mq, redis]
+    volumes:
+      - ./src/pollutionService:/app
+
+  pollution.service.celery:
+    build:
+      context: .
+      dockerfile: docker/pollutionService.Dockerfile
+    restart: unless-stopped
+    command: 'watchmedo auto-restart -d ./ -p *.py -R -- celery -A project worker --pool=gevent -c 50 -l info -n worker@default'
+    env_file: src/pollutionService/.env
+    environment:
+      C_FORCE_ROOT: true
+    depends_on: [pollution.service, elasticsearch, mq, redis]
+    volumes:
+      - ./src/pollutionService:/app
+
+  pollution.service.flower:
+    build:
+      context: .
+      dockerfile: docker/pollutionService.Dockerfile
+    restart: unless-stopped
+    command: celery -A project flower --port=5555
+    env_file: src/pollutionService/.env
+    environment:
+      C_FORCE_ROOT: true
+    depends_on: [pollution.service, mq, redis]
+    ports:
+      - 5555:5555
+    volumes:
+      - ./src/pollutionService:/app
+
+  redis:
+    image: redis:5-alpine
+    restart: unless-stopped
+    volumes:
+      - redis-data:/data
+
+  mq:
+    hostname: mq
+    image: rabbitmq:3.11-management-alpine
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+      RABBITMQ_NODENAME: mq
+    ports:
+        - 5672:5672
+        - 15672:15672
+    volumes:
+        - mq-data:/var/lib/mq/
+        - mq-log-data:/var/log/mq/
+
+  elasticsearch:
+    restart: unless-stopped
+    image: elasticsearch:8.5.0
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
+      - xpack.security.enabled=false
+    volumes:
+      - es-data:/usr/share/elasticsearch/data
+    ports:
+      - target: 9200
+        published: 9200
+
+  kibana:
+    restart: unless-stopped
+    image: kibana:8.5.0
+    ports:
+      - target: 5601
+        published: 5601
+    depends_on:
+      - elasticsearch
+
+  pollution.db:
+    restart: unless-stopped
+    image: postgres:14.5
+    environment:
+      POSTGRES_DB: "pollution"
+      POSTGRES_PASSWORD: "postgres"
+    ports:
+      - "5432:5432"
+    volumes:
+    - pg-data:/var/lib/postgresql/data
+
+volumes:
+  redis-data:
+    driver: local
+  mq-data:
+    driver: local
+  mq-log-data:
+    driver: local
+  pg-data:
+    driver: local
+  es-data:
+    driver: local

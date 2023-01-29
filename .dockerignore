@@ -1,0 +1,9 @@
+/.git
+/.pytest_cache
+/.gitignire
+/docker-compose.yml
+/Dockerfile
+/__pycache__
+/venv
+/README.md
+**/*.pyc

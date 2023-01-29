@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "api gateway"
+version = "0.1.0"
+description = ""
+authors = ["Mostafa <mostafa.babaii@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+Flask = {extras = ["async"], version = "^2.2.2"}
+python-dotenv = "^0.21.1"
+redis = "^4.4.2"
+pika = "^1.3.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
