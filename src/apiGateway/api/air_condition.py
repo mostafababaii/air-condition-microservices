@@ -1,14 +1,14 @@
 import abc
 import datetime
 from typing import Dict, Optional, Union
-from services.cache import CacheService
+from api.services.cache import CacheService
 from api.message_queue import (
     Producer,
     RabbitMQQueueConfig,
     RabbitMQProducer
 )
-from services.cache import cache_service
-from services.message_queue import get_amq_client
+from api.services.cache import cache_service
+from api.services.message_queue import get_amq_client
 from settings import base as base_settings
 
 

@@ -1,6 +1,6 @@
 from os import environ as env
 from dotenv import load_dotenv
-from services.message_queue import RabbitMQConfig
+from api.services.message_queue import RabbitMQConfig
 
 load_dotenv()
 

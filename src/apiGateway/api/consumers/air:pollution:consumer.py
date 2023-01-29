@@ -1,7 +1,6 @@
-from api.message_queue import RabbitMQQueueConfig
-from services.message_queue import get_amq_client
+from api.message_queue import RabbitMQQueueConfig, AirPollutionConsumer
+from api.services.message_queue import get_amq_client
 from settings import base as base_settings
-from api.message_queue import AirPollutionConsumer
 
 
 if __name__ == '__main__':

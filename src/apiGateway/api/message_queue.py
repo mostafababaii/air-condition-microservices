@@ -1,7 +1,7 @@
 import abc
 import json
 from dataclasses import dataclass
-from services.cache import cache_service
+from api.services.cache import cache_service
 
 
 @dataclass
