@@ -2,6 +2,7 @@ import abc
 import datetime
 from typing import Dict, Optional, Union
 from api.services.cache import CacheService
+from api.exceptions.validation import ValidationError
 from api.message_queue import (
     Producer,
     RabbitMQQueueConfig,
@@ -10,10 +11,6 @@ from api.message_queue import (
 from api.services.cache import cache_service
 from api.services.message_queue import get_amq_client
 from settings import base as base_settings
-
-
-class ValidationError(ValueError):
-    pass
 
 
 class AirConditionPayload:

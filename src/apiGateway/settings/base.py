@@ -6,7 +6,7 @@ load_dotenv()
 
 
 # Application
-ENV = env["ENV"]
+DEBUG = env["DEBUG"]
 
 
 # Redis
