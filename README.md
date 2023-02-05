@@ -44,4 +44,4 @@ If you call this API again, you will receive air pollution data.
 }
 ```
 
-<img title="a title" alt="Alt text" src="Diagram.svg">
+<img title="Diagram" alt="Diagram" src="Diagram.svg">
