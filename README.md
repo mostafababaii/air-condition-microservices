@@ -6,9 +6,11 @@ in this microservice, I used various services such as **RabbitMQ**, **Redis**, *
 
 ## Setup project
 
-Use below command to setup the project:
+Use below commands to setup the project:
 
-**docker-compose up -d --build**
+**make build**
+**make migrate**
+**make index**
 
 ## Air pollution endpoint
 
