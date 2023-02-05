@@ -9,7 +9,9 @@ in this microservice, I used various services such as **RabbitMQ**, **Redis**, *
 Use below commands to setup the project:
 
 **make build**
+
 **make migrate**
+
 **make index**
 
 ## Air pollution endpoint
